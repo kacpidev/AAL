@@ -11,7 +11,7 @@
 
 #include <vector>
 #include <map>
-#include <GL/glut.h>
+#include "GL/glut.h"
 #include "Segment.h"
 #include "MessageHandler.h"
 #include "Utilities.h"

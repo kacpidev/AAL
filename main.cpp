@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Program.h"
 #include "Collection.h"
+#include <GL/glut.h>
 
 int main(int argc, char *argv[])
 {

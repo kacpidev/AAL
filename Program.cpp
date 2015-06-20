@@ -70,7 +70,7 @@ void Program::run()
 
 		if (arrangmentParameter != "")
 		{
-			algorithmParameter == "SH" ? arrangmentType = CollisionDetector::SH : arrangmentType = CollisionDetector::SH;
+			algorithmParameter == "NO" ? arrangmentType = CollisionDetector::NO : arrangmentType = CollisionDetector::SH;
 		}
 
 		_collection.setCollisionDetector(new CollisionDetector(_collection.getSegments(), algorithmType, arrangmentType));
