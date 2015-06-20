@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "Point.h"
 
 int Point::pointOrientation(Point p, Point q, Point r)

@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "Segment.h"
 
 bool Segment::isIntersecting(Segment other)
@@ -26,7 +34,7 @@ bool Segment::isIntersecting(Segment other)
 	return false;
 }
 
-bool Segment::isIntersecting(Point leftDownCorner, Point rightTopCorner)
+bool Segment::isInsideRect(Point leftDownCorner, Point rightTopCorner)
 {
 	//TODO - IMPROVE
 
@@ -41,7 +49,9 @@ bool Segment::isIntersecting(Point leftDownCorner, Point rightTopCorner)
 	if (isIntersecting(leftSegment) ||
 			isIntersecting(rightSegment) ||
 			isIntersecting(topSegment) ||
-			isIntersecting(downSegment))
+			isIntersecting(downSegment) ||
+			startPoint.x > leftDownCorner.x && startPoint.x < rightTopCorner.x && 
+			startPoint.y > leftDownCorner.y && startPoint.y < rightTopCorner.y)
 	{
 		return true;
 	}

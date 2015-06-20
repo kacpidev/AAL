@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #ifndef _PROGRAM_
 #define _PROGRAM_
 
@@ -6,7 +14,6 @@
 #include "Collection.h"
 #include "Utilities.h"
 #include "CollisionDetector.h"
-#include <GL/glut.h>
 
 /*
 	Main project class, i/o managment and collision detection
@@ -21,7 +28,7 @@ public:
 	~Program()
 	{
 	};
-
+	
 	//Contructs program with inputs parameters
 	Program(int argc, char *argv[]);
 	
@@ -29,6 +36,9 @@ public:
 
 	//Program operations
 	void run();
+	static void draw(void);
+
+	static Program * program;
 private:
 	Interface _interface;
 	Collection _collection;

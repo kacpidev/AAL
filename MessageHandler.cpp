@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "MessageHandler.h"
 
 

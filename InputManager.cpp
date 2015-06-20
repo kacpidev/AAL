@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "InputManager.h"
 
 
@@ -56,6 +64,12 @@ Segment * InputManager::parseDataRow(const std::string & row)
 	try
 	{
 		ss >> x1 >> y1 >> x2 >> y2;
+		if (x1 > Utilities::windowSize.x || y1 > Utilities::windowSize.y || 
+				x2 > Utilities::windowSize.x || y2 > Utilities::windowSize.y)
+		{
+			MessageHandler::printMessage("Data invalid - coordinates don't fit in windowS size which is: " + std::to_string(Utilities::windowSize.x) + "x" + std::to_string(Utilities::windowSize.y) + "\n", MessageHandler::ERR);
+		}
+
 		segment = new Segment(Point(x1, y1), Point(x2, y2));
 		return segment;
 	}

@@ -1,11 +1,17 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "Collection.h"
-
 
 Collection::~Collection()
 {
 	delete(_collisionDetector);
 }
-
 
 void Collection::generateRandomData(unsigned long number, Point range)
 {

@@ -1,5 +1,13 @@
-#ifndef UTILITIES
-#define UTILITIES
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
+#ifndef _UTILITIES_
+#define _UTILITIES_
 
 #include <sstream>
 #include <string>

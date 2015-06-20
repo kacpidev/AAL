@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "Program.h"
 
 
@@ -38,7 +46,7 @@ void Program::run()
 		{
 			MessageHandler::printMessage("Generating records", MessageHandler::INFO);
 			Utilities::timeStart();
-			this->_collection.generateRandomData(tests, Utilities::windowSize); //HARDCODE
+			this->_collection.generateRandomData(tests, Utilities::windowSize); 
 			MessageHandler::printMessage(std::to_string(Utilities::timeStop()), MessageHandler::TIME);
 		}
 		else
@@ -47,7 +55,7 @@ void Program::run()
 			return;
 		}
 
-		CollisionDetector::AlgorithmType algorithmType = CollisionDetector::DS;
+		CollisionDetector::AlgorithmType algorithmType = CollisionDetector::WS;
 		CollisionDetector::ArrangmentType arrangmentType = CollisionDetector::NO;
 
 		std::string algorithmParameter, arrangmentParameter;
@@ -62,7 +70,7 @@ void Program::run()
 
 		if (arrangmentParameter != "")
 		{
-			algorithmParameter == "SH" ? arrangmentType = CollisionDetector::SH : arrangmentType = CollisionDetector::NO;
+			algorithmParameter == "SH" ? arrangmentType = CollisionDetector::SH : arrangmentType = CollisionDetector::SH;
 		}
 
 		_collection.setCollisionDetector(new CollisionDetector(_collection.getSegments(), algorithmType, arrangmentType));
@@ -72,3 +80,10 @@ void Program::run()
 
 	}
 }
+
+void Program::draw(void)
+{
+	Program::program->_collection.getCollisionDetector()->drawAll();
+}
+
+Program * Program::program = nullptr;

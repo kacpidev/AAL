@@ -74,11 +74,30 @@ bool Interface::getBoolParameter(const std::string key)
 
 void Interface::printHelp()
 {
-
+	std::cout << "~~Help~~\n";
+	std::cout << std::left;
+	std::cout << "AAL_Kacper_Domanski - Segment grouping\n\n";
+	std::cout << "Program detecting colliding segments groups";
+	std::cout << "With use of GLFW shows different groups of colliding segments in different colors\n\n";
+	std::cout << "Algorithm types: \n";
+	std::cout << "  - DS - Deep Search - recursive approch \n";
+	std::cout << "  - WS - Wide Search - each with each check \n\n";
+	std::cout << "Arrangment types: \n";
+	std::cout << "  - NO - all segments in one container \n";
+	std::cout << "  - SH - SpatialHash - space divided to 100 tiles segments assigned to tiles in which they belong \n\n";
+	std::cout << "Use   --usage   parameter to check available options.\n";
 }
 
 
 void Interface::printUsage()
 {
-
+	std::cout << " >> Usage:\n";
+	std::cout << std::left;
+	std::cout << " -h | --help : Prints useful information about program.\n";
+	std::cout << " -u | --usage : Prints message with possible input parameters.\n";
+	std::cout << " -f | --file[filename] : Input file with information about segments.\n";
+	std::cout << " -o | --output[filename]  : Output file to be created with program results.\n";
+	std::cout << " --generate-tests [numberOfSegments] : Forces program to generate its own tests in given number.\n";
+	std::cout << " --algorithm [WS | DS]" << " : Specifies which arrange algorithm to use (default WS).\n";
+	std::cout << " --arrangment [NO | SH]" << " : Specifies which sorting heuristic to use (default NO).\n";
 }

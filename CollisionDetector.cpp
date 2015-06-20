@@ -1,7 +1,17 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "CollisionDetector.h"
 
 CollisionDetector::CollisionDetector(Segments segments, AlgorithmType algorithmType, ArrangmentType arrangmentType) :
-_segments(segments), _algorithmType(algorithmType), _arrangmentType(arrangmentType) { };
+_segments(segments), _algorithmType(algorithmType), _arrangmentType(arrangmentType)
+{
+};
 
 void CollisionDetector::arrange()
 {
@@ -15,15 +25,15 @@ void CollisionDetector::arrange()
 	Utilities::timeStart();
 
 	detectCollisions();
-	
+
 	MessageHandler::printMessage(std::to_string(Utilities::timeStop()), MessageHandler::TIME);
 
-	//MessageHandler::printMessage("Creating groups", MessageHandler::INFO);
-	//Utilities::timeStart();
+	MessageHandler::printMessage("Creating groups", MessageHandler::INFO);
+	Utilities::timeStart();
 
-	//createGroups();
-	//
-	//MessageHandler::printMessage(std::to_string(Utilities::timeStop()), MessageHandler::TIME);
+	recalculateGroups();
+	
+	MessageHandler::printMessage(std::to_string(Utilities::timeStop()), MessageHandler::TIME);
 
 	MessageHandler::printMessage("Created " + std::to_string(colorsCount) + " groups", MessageHandler::INFO);
 
@@ -42,14 +52,15 @@ CollisionDetector::~CollisionDetector()
 void CollisionDetector::sort()
 {
 	Point cellSize(Utilities::windowSize.x / 10, Utilities::windowSize.y / 10);
-	
+
 	// WORKAROUND
 
 	if (_arrangmentType == ArrangmentType::NO)
 	{
+		_segmentGroupsTemp.push_back(std::vector<Segment*>());
+
 		for each (auto segment in _segments)
-		{		
-			_segmentGroupsTemp.push_back(std::vector<Segment*>());
+		{
 			_segmentGroupsTemp[0].push_back(segment);
 		}
 	}
@@ -72,10 +83,10 @@ void CollisionDetector::sort()
 			for (int j = 0; j < cellsCount.y; ++j)
 			{
 				_segmentGroupsTemp.push_back(std::vector<Segment*>());
-				
+
 				for each (auto segment in _segments)
 				{
-					if (segment->isIntersecting(Point(i*cellSize.x, j* cellSize.y), Point((i + 1)*cellSize.x, (j + 1)*cellSize.y)))
+					if (segment->isInsideRect(Point(i*cellSize.x, j* cellSize.y), Point((i + 1)*cellSize.x, (j + 1)*cellSize.y)))
 					{
 						_segmentGroupsTemp[i*cellsCount.y + j].push_back(segment);
 					}
@@ -98,7 +109,7 @@ void CollisionDetector::detectCollisions()
 
 			if (_algorithmType == AlgorithmType::DS)
 			{
-				this->checkDeep(segment, segmentGroup);
+					this->checkDeep(segment, segmentGroup);
 			}
 			else //WS
 			{
@@ -110,7 +121,6 @@ void CollisionDetector::detectCollisions()
 
 void CollisionDetector::checkDeep(Segment* segment, Segments segmentGroup)
 {
-
 	for each (auto other in segmentGroup)
 	{
 		if (other->color != segment->color)
@@ -127,35 +137,13 @@ void CollisionDetector::checkDeep(Segment* segment, Segments segmentGroup)
 				}
 				else
 				{
-					if (_matchingColors.find(other->color) != _matchingColors.end())
+					int lowerValue = std::min(segment->color, other->color);
+					int higherValue = std::max(segment->color, other->color);
+					std::pair<int, int> tempMatch = std::make_pair(lowerValue, higherValue);
+					
+					if (std::find(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), tempMatch) == _matchingColorsTemp.end())
 					{
-						bool alreadyMatched = false;
-						for each(auto i in _matchingColors[other->color])
-						{
-							if (i == segment->color)
-							{
-								alreadyMatched = true;
-								_matchingColors[other->color].push_back(segment->color);
-								break;
-							}
-						}
-					}
-					else if (_matchingColors.find(segment->color) != _matchingColors.end())
-					{
-						bool alreadyMatched = false;
-						for each(auto i in _matchingColors[segment->color])
-						{
-							if (i == other->color)
-							{
-								alreadyMatched = true;
-								_matchingColors[segment->color].push_back(other->color);
-								break;
-							}
-						}
-					}
-					else
-					{
-						_matchingColors[segment->color].push_back(other->color);
+						_matchingColorsTemp.push_back(tempMatch);
 					}
 				}
 			}
@@ -177,35 +165,13 @@ void CollisionDetector::checkWide(Segment* segment, Segments segmentGroup)
 				}
 				else
 				{
-					if (_matchingColors.find(other->color) != _matchingColors.end())
+					int lowerValue = std::min(segment->color, other->color);
+					int higherValue = std::max(segment->color, other->color);
+					std::pair<int, int> tempMatch = std::make_pair(lowerValue, higherValue);
+
+					if (std::find(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), tempMatch) == _matchingColorsTemp.end())
 					{
-						bool alreadyMatched = false;
-						for each(auto i in _matchingColors[other->color])
-						{
-							if (i == segment->color)
-							{
-								alreadyMatched = true;
-								_matchingColors[other->color].push_back(segment->color);
-								break;
-							}
-						}
-					}
-					else if (_matchingColors.find(segment->color) != _matchingColors.end())
-					{
-						bool alreadyMatched = false;
-						for each(auto i in _matchingColors[segment->color])
-						{
-							if (i == other->color)
-							{
-								alreadyMatched = true;
-								_matchingColors[segment->color].push_back(other->color);
-								break;
-							}
-						}
-					}
-					else
-					{
-						_matchingColors[segment->color].push_back(other->color);
+						_matchingColorsTemp.push_back(tempMatch);
 					}
 				}
 			}
@@ -216,13 +182,107 @@ void CollisionDetector::checkWide(Segment* segment, Segments segmentGroup)
 void CollisionDetector::recalculateGroups()
 {
 	int deletedGroups{ 0 };
+	bool listUpdated = true;
+
+	std::sort(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), [](const std::pair<int, int> &left, const std::pair<int, int> &right)
+	{
+		return left < right;
+	});
+
+	while (_matchingColorsTemp.size() > 0)
+	{
+		std::vector<int> tempVec = std::vector<int>();
+
+		tempVec.push_back(_matchingColorsTemp[0].first);
+		tempVec.push_back(_matchingColorsTemp[0].second);
+		deletedGroups++; 
+		_matchingColorsTemp.erase(std::find(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), _matchingColorsTemp[0]));
+
+		while (listUpdated)
+		{
+			listUpdated = false;
+
+			std::vector<std::pair<int, int>> tempMatchingColors = _matchingColorsTemp;
+			
+			for each(auto tempMatch in tempMatchingColors)
+			{
+				if (tempVec.empty() != true)
+				{
+					if (std::find(tempVec.begin(), tempVec.end(), tempMatch.first) != tempVec.end())
+					{
+						if (std::find(tempVec.begin(), tempVec.end(), tempMatch.second) != tempVec.end())
+						{
+							_matchingColorsTemp.erase(std::find(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), tempMatch));
+						}
+						else
+						{
+							tempVec.push_back(tempMatch.second);
+							_matchingColorsTemp.erase(std::find(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), tempMatch));
+							deletedGroups++;
+							listUpdated = true;
+						}
+					}
+					else if (std::find(tempVec.begin(), tempVec.end(), tempMatch.second) != tempVec.end())
+					{
+						if (std::find(tempVec.begin(), tempVec.end(), tempMatch.first) != tempVec.end())
+						{
+							_matchingColorsTemp.erase(std::find(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), tempMatch));
+						}
+						else
+						{
+							tempVec.push_back(tempMatch.first);
+							_matchingColorsTemp.erase(std::find(_matchingColorsTemp.begin(), _matchingColorsTemp.end(), tempMatch));
+							deletedGroups++;
+							listUpdated = true;
+						}
+					}
+				}
+			}
+			_matchingColors.back();
+		}
+		_matchingColors.push_back(tempVec);
+	}
 
 	for each(auto segment in _segments)
 	{
 		for each(auto colorGroup in _matchingColors)
 		{
-
+			if (std::find(colorGroup.begin(), colorGroup.end(), segment->color) != colorGroup.end())
+			{
+				segment->color = colorGroup[0];
+				break;
+			}
 		}
 	}
 	colorsCount -= deletedGroups;
+}
+
+void CollisionDetector::drawAll()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-10, 110, -10, 110, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	for each(auto segment in _segments)
+	{
+		double x1 = (double) segment->startPoint.x;
+		double y1 = (double) segment->startPoint.y;
+		double x2 = (double) segment->endPoint.x;
+		double y2 = (double) segment->endPoint.y;
+
+		glColor3ub((220 * segment->color) % 256, (300 * segment->color) % 256, (400 * segment->color) % 256);
+
+		glBegin(GL_LINE_STRIP);
+		glVertex3f(x1, y1, 0.0);
+		glVertex3f(x2, y2, 0.0);
+		glEnd();
+	}
+
+	glutSwapBuffers();
+	
 }

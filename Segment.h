@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #ifndef _LINE_
 #define _LINE_
 
@@ -10,7 +18,7 @@ public:
 	Segment(Point startPoint, Point endPoint) : startPoint(startPoint), endPoint(endPoint) { };
 	
 	bool isIntersecting(Segment other);
-	bool isIntersecting(Point leftDownCorner, Point rightTopCorner);
+	bool isInsideRect(Point leftDownCorner, Point rightTopCorner);
 	bool isPointOnSegment(Point other);
 	//void draw();
 

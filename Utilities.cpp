@@ -1,3 +1,11 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #include "Utilities.h"
 
 clock_t Utilities::end = 0;
@@ -14,7 +22,7 @@ float Utilities::timeStop()
 	return (end - begin) / (float)CLOCKS_PER_SEC;
 }
 
-Point Utilities::windowSize = Point(1000, 1000);
+Point Utilities::windowSize = Point(100, 100);
 
 void Utilities::replaceKeyword(const std::string keyword, std::string value, std::string & text)
 {

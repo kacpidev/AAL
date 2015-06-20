@@ -1,8 +1,17 @@
+/****************************************************
+*	Author: Kacper Domañski
+*	Contact: kacper.domanski@kacpidev.pl
+*	Web: blog.kacpidev.pl
+*
+*	Warsaw University of Technology
+*	Faculty of Electronics and Information Technology
+****************************************************/
 #ifndef _COLLISION_DETECTOR_
 #define _COLLISION_DETECTOR_
 
 #include <vector>
 #include <map>
+#include <GL/glut.h>
 #include "Segment.h"
 #include "MessageHandler.h"
 #include "Utilities.h"
@@ -61,7 +70,8 @@ private:
 
 	SegmentGroups _segmentGroupsTemp; //segments separated by regionsroups
 	SegmentGroups _segmentGroupsFinal; //segments separated  in divided groups
-	std::map<int, std::vector<int>> _matchingColors;
+	std::vector<std::pair<int, int>> _matchingColorsTemp;
+	std::vector<std::vector<int>> _matchingColors;
 };
 
 #endif
